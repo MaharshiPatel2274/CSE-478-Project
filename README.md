@@ -15,10 +15,14 @@ Interactive web-based visualizations exploring two decades of global renewable e
 ## Project Structure
 
 Project Skeleton/
+
  index.html          # Main HTML page
-  styles.css          # Styling
+ 
+ styles.css          # Styling
+ 
 js/
   main.js        # JavaScript logic
+
 data/              # Data files (to be added)
   README.md          # This file
 
