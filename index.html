@@ -16,20 +16,62 @@
 
         <!-- Navigation -->
         <nav class="visualization-nav">
-            <button class="nav-btn active">World Map</button>
-            <button class="nav-btn">Country Trends</button>
-            <button class="nav-btn">Energy Mix</button>
-            <button class="nav-btn">Year-over-Year</button>
-            <button class="nav-btn">Economic Context</button>
-            <button class="nav-btn">Flower Glyphs</button>
+            <button class="nav-btn active" data-viz="worldMap">World Map</button>
+            <button class="nav-btn" data-viz="lineChart">Country Trends</button>
+            <button class="nav-btn" data-viz="placeholder3">Energy Mix</button>
+            <button class="nav-btn" data-viz="placeholder4">Year-over-Year</button>
+            <button class="nav-btn" data-viz="placeholder5">Economic Context</button>
+            <button class="nav-btn" data-viz="placeholder6">Flower Glyphs</button>
         </nav>
 
-        <!-- Placeholder Content -->
-        <main class="content">
-            <section class="placeholder">
-                <h2> Project Skeleton</h2>
-                <p>This is the initial project structure for the CSE 478 Renewable Energy Visualization project.</p>
-                <p>Visualizations will be implemented here.</p>
+        <main class="viz-container">
+            <section id="worldMap" class="visualization active">
+                <div class="viz-header">
+                    <h2>Global Renewable Energy Share</h2>
+                    <p class="viz-description">
+                        Interactive world map showing renewable energy adoption across countries.
+                        Hover over countries to see details.
+                    </p>
+                </div>
+                <div id="worldMapContainer" class="chart-container"></div>
+            </section>
+
+            <section id="lineChart" class="visualization">
+                <div class="viz-header">
+                    <h2>Multi-Country Renewable Energy Trends</h2>
+                    <p class="viz-description">
+                        Compare renewable energy trends across different countries over time.
+                    </p>
+                </div>
+                <div id="lineChartContainer" class="chart-container"></div>
+            </section>
+
+            <section id="placeholder3" class="visualization">
+                <div class="placeholder">
+                    <h2>Energy Mix</h2>
+                    <p>Stacked area chart showing renewable energy composition by source.</p>
+                </div>
+            </section>
+
+            <section id="placeholder4" class="visualization">
+                <div class="placeholder">
+                    <h2>Year-over-Year Changes</h2>
+                    <p>Diverging bar chart ranking countries by growth rate.</p>
+                </div>
+            </section>
+
+            <section id="placeholder5" class="visualization">
+                <div class="placeholder">
+                    <h2>Economic Context</h2>
+                    <p>Scatter plot exploring GDP vs renewable energy adoption.</p>
+                </div>
+            </section>
+
+            <section id="placeholder6" class="visualization">
+                <div class="placeholder">
+                    <h2>Flower Glyphs</h2>
+                    <p>Radial visualization of energy mix composition.</p>
+                </div>
             </section>
         </main>
 
@@ -40,6 +82,15 @@
         </footer>
     </div>
 
+    <!-- D3.js and TopoJSON -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    
+    <!-- Visualization Classes -->
+    <script src="js/worldMap.js"></script>
+    <script src="js/LineChart.js"></script>
+    
+    <!-- Main Application -->
     <script src="js/main.js"></script>
 </body>
 </html>

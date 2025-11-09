@@ -1,0 +1,6 @@
+country,year,renewable_share,solar_share,wind_share,hydro_share
+United States,1990,12.1,0.0,0.1,11.5
+United States,1995,12.8,0.0,0.2,12.1
+United States,2000,11.3,0.0,0.4,10.5
+United States,2005,9.6,0.0,0.6,8.7
+United States,2010,12.2,0.1,2.3,9.2

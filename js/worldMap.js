@@ -3,11 +3,6 @@ class WorldMap {
         this.containerId = containerId;
         this.data = data || [];
         this.currentYear = 2023;
-        this.svg = null;
-        this.mapGroup = null;
-        this.projection = null;
-        this.path = null;
-        this.tooltip = null;
         this.colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, 100]);
         this.init();
     }
@@ -70,7 +65,7 @@ class WorldMap {
                 .on('mouseout', () => this.handleMouseOut());
 
         } catch (error) {
-            console.error('Error loading map data:', error);
+            console.error('Error loading map:', error);
         }
     }
 
