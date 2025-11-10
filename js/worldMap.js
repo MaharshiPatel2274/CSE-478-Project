@@ -4,6 +4,7 @@ class WorldMap {
         this.data = data || [];
         this.currentYear = 2023;
         this.colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, 100]);
+        this.selectedCountry = null;
         this.init();
     }
 
@@ -22,6 +23,8 @@ class WorldMap {
             .translate([width / 2, height / 2]);
 
         this.path = d3.geoPath().projection(this.projection);
+
+        this.mapGroup = this.svg.append('g');
 
         const zoom = d3.zoom()
             .scaleExtent([1, 8])
@@ -45,6 +48,8 @@ class WorldMap {
             .style('opacity', 0);
 
         this.loadMapData();
+        this.setupControls();
+        this.createLegend();
     }
 
     async loadMapData() {
@@ -52,6 +57,8 @@ class WorldMap {
             const worldData = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
             const countries = topojson.feature(worldData, worldData.objects.countries);
 
+            this.countries = countries.features;
+            
             this.mapGroup.selectAll('path')
                 .data(countries.features)
                 .enter()
@@ -63,12 +70,61 @@ class WorldMap {
                 .attr('stroke-width', 0.5)
                 .on('mouseover', (event, d) => this.handleMouseOver(event, d))
                 .on('mouseout', () => this.handleMouseOut());
+                .on('click', (event, d) => this.handleClick(event, d));
 
         } catch (error) {
             console.error('Error loading map:', error);
         }
     }
 
+    setupControls() {
+        const slider = document.getElementById('year-slider');
+        const label  = document.getElementById('current-year');
+        if (slider) {
+            if (!slider.min)  slider.min  = 1990;
+            if (!slider.max)  slider.max  = 2023;
+            if (!slider.value) slider.value = this.currentYear;
+
+            slider.addEventListener('input', (e) => {
+                this.currentYear = +e.target.value;
+                if (label) label.textContent = this.currentYear;
+                this.updateMap();
+            });
+        }
+        if (label) label.textContent = this.currentYear;
+    }
+
+    createLegend() {
+        const container = document.getElementById('map-legend');
+        if (!container) return;
+
+        const w = 280, h = 12;
+        const svg = d3.select(container).append('svg').attr('width', w).attr('height', h + 16);
+        const defs = svg.append('defs');
+        const gradId = `legend-grad-${this.containerId}`;
+
+        const lg = defs.append('linearGradient').attr('id', gradId);
+        [0, 25, 50, 75, 100].forEach(p => {
+            lg.append('stop')
+              .attr('offset', `${p}%`)
+              .attr('stop-color', this.colorScale(p));
+        });
+
+        svg.append('rect').attr('x', 0).attr('y', 0).attr('width', w).attr('height', h)
+           .attr('fill', `url(#${gradId})`);
+
+        const scale = d3.scaleLinear().domain([0, 100]).range([0, w]);
+        const axis = d3.axisBottom(scale).ticks(5).tickFormat(d => `${d}%`);
+        svg.append('g').attr('transform', `translate(0,${h})`).call(axis).select(".domain").remove();
+    }
+
+    updateMap() {
+        if (!this.countries) return;
+        this.mapGroup.selectAll('path.country')
+            .transition().duration(250)
+            .attr('fill', d => this.getCountryColor(d));
+    }
+    
     getCountryColor(feature) {
         const row = this.getCountryData(feature, this.currentYear);
         if (row && row.renewable_share != null) {
@@ -100,4 +156,14 @@ class WorldMap {
     handleMouseOut() {
         this.tooltip.style('opacity', 0);
     }
+    handleClick(event, d) {
+        this.mapGroup.selectAll('path.country').classed('selected', false);
+        d3.select(event.currentTarget).classed('selected', true);
+        this.selectedCountry = (d.properties && d.properties.name) || null;
+
+        if (window.app && typeof window.app.updateSelectedCountry === 'function') {
+            window.app.updateSelectedCountry(this.selectedCountry);
+        }
+    }
+}
 }
